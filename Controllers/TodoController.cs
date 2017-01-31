@@ -41,19 +41,19 @@ namespace WebApplication1.Controllers
         }
 
         // GET: Todo/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Todo todo = db.Todos.Find(id);
-            if (todo == null)
-            {
-                return HttpNotFound();
-            }
-            return View(todo);
-        }
+        //public ActionResult Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Todo todo = db.Todos.Find(id);
+        //    if (todo == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(todo);
+        //}
 
         // GET: Todo/Create
         public ActionResult Add()
@@ -111,10 +111,30 @@ namespace WebApplication1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        
         public ActionResult Edit([Bind(Include = "ID,Title,Description")] Todo todo)
         {
+            var currentUser = manager.FindById(User.Identity.GetUserId());
+
+
             if (ModelState.IsValid)
             {
+                //var isAdmin = false;
+                //if (manager.GetRoles(currentUser.Id).Where(o => string.Equals("Admin", o, StringComparison.OrdinalIgnoreCase)).Any())
+                //{
+                //    isAdmin = true;
+                //}
+
+                //Todo todo1 = db.Todos.Find(todo.ID);
+                //if (todo1 == null)
+                //{
+                //    return HttpNotFound();
+                //}
+                //if (todo1.User.Id != currentUser.Id)
+                //{
+                //    if (!isAdmin)
+                //        return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+                //}
                 db.Entry(todo).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -126,11 +146,24 @@ namespace WebApplication1.Controllers
         [Authorize]
         public ActionResult Delete(int? id)
         {
+            var currentUser = manager.FindById(User.Identity.GetUserId());
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Todo todo = db.Todos.Find(id);
+
+            var isAdmin = false;
+            if (manager.GetRoles(currentUser.Id).Where(o => string.Equals("Admin", o, StringComparison.OrdinalIgnoreCase)).Any())
+            {
+                isAdmin = true;
+            }
+            if (todo.User.Id != currentUser.Id)
+            {
+                if (!isAdmin)
+                    return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+            }
+
             if (todo == null)
             {
                 return HttpNotFound();
@@ -143,7 +176,20 @@ namespace WebApplication1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            var currentUser = manager.FindById(User.Identity.GetUserId());
             Todo todo = db.Todos.Find(id);
+
+            var isAdmin = false;
+            if (manager.GetRoles(currentUser.Id).Where(o => string.Equals("Admin", o, StringComparison.OrdinalIgnoreCase)).Any())
+            {
+                isAdmin = true;
+            }
+            if (todo.User.Id != currentUser.Id)
+            {
+                if (!isAdmin)
+                    return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+            }
+
             db.Todos.Remove(todo);
             db.SaveChanges();
             return RedirectToAction("Index");
