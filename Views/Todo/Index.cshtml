@@ -1,0 +1,68 @@
+﻿@model IEnumerable<WebApplication1.Models.Todo>
+
+@{
+    ViewBag.Title = "Todo's";
+}
+
+<h2>Todo's</h2>
+
+
+<div class="row hs3">
+    <div class="col-md4">
+    <a href="@Url.Action("Add","Todo")" class="btn btn-primary">
+        <span class="glyphicon glyphicon-plus"></span> 
+        Add
+       
+       
+    </a>
+        </div>
+    </div>
+
+
+<div class="row">
+<div class="col-lg-6">
+    <ul class="list-group">
+
+    @*<tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th></th>
+    </tr>*@
+
+@foreach (var item in Model) {
+    
+    <li class="list-group-item row">
+        
+        <div class="col-lg-8">
+           <span class="TodoTitle"> @Html.DisplayFor(modelItem => item.Title)</span>
+            <br/>
+            @Html.DisplayFor(modelItem => item.Description)
+        </div>
+   
+        <div class="col-lg-4">
+            @*@Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+           
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })*@
+
+            <a href="@Url.Action("Edit","Todo",new { id=item.ID })" class="btn">
+                <span class="glyphicon glyphicon-pencil"></span>
+                
+            </a>
+
+            <a href="@Url.Action("Delete","Todo", new { id=item.ID })" class="btn">
+                <span class="glyphicon glyphicon-trash"></span>
+                
+            </a>
+        </div>
+    </li>
+  
+}
+    </ul>
+
+    </div>
+<div class="col-lg-6"></div>
+    </div>@* end of row*@

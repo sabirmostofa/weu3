@@ -1,0 +1,65 @@
+﻿@model WebApplication1.Models.Todo
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2> @Html.DisplayFor(model => model.Title) - Delete</h2>
+
+<div>
+    
+
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+        <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                The Following item will be deleted:
+           
+        <br/>
+           <b> @Html.DisplayNameFor(model => model.Title):</b>
+        
+
+       
+            @Html.DisplayFor(model => model.Title)
+       
+                <br />
+       
+            <b>@Html.DisplayNameFor(model => model.Description):</b>
+      
+                
+        
+            @Html.DisplayFor(model => model.Description)
+       
+
+    
+                </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-4">
+
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="glyphicon glyphicon-trash"></i> Delete
+                                </button>
+                                @*<input type="submit" value="Create" class="btn-primary " />*@
+                            </div>
+                            <div class="col-md-4">
+                                <a href="@Url.Action("","Todo")">
+                                <button   type="button" class="btn ">
+                                     Cancel
+                                </button>
+                                    </a>
+                               
+                            </div>
+                        </div>
+                        </div>
+            </div>
+            </div>
+            </div>
+
+     
+    }
+</div>
